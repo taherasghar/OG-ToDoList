@@ -3,6 +3,8 @@ const body_parser = require("body-parser");
 const notifier = require("node-notifier");
 const fs = require('fs');
 const app = express();
+const importedDate = require(__dirname +"/dateLocalModule.js");
+
 var newItems = fs.readFileSync('list_data.txt').toString().split("\n").slice(1);
 
 const port = 2024;
@@ -12,7 +14,7 @@ app.use(express.static("public"));
 app.set("view engine", "ejs");
 
 app.get("/", (req, res) => {
-  var date = getCurrentDate();
+  var date = importedDate.getCurrentDate();
   var name = "User";
   var seconds = new Date().getSeconds();
 
@@ -64,47 +66,6 @@ app.listen(port, () => {
   console.log("Listening to localhost at " + port);
 });
 
-const getCurrentDate = () => {
-  var days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  var month = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  var date = new Date();
-  var today =
-    days[date.getDay()] +
-    ", " +
-    date.getDate() +
-    " " +
-    month[date.getMonth()] +
-    ", " +
-    date.getFullYear() +
-    " Time: " +
-    date.getHours() +
-    ":" +
-    date.getMinutes() +
-    ":" +
-    date.getSeconds();
-  return today;
-};
 
 async function writeFileMethod(){
   await fs.writeFileSync('./list_data.txt', newItems.join('\n'));
